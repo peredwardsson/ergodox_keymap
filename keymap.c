@@ -27,7 +27,8 @@
 
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
-  PE_TILD
+  PE_TILD,
+  PE_GRAV
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -41,9 +42,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | ~L3    | A    | S    | D    | F    | G    |------|           |------| H    | J    | K    | L    | Ö    | Ä      |
  * |--------+------+------+------+------+------| `    |           | Del  |------+------+------+------+------+--------|
- * | LShft  | Z    | X    | C    | V    | B    |  '   |           |      | N    | M    | ,    | .    | -    | RShift |
+ * | LShft  | Z    | X    | C    | V    | B    |  '   |           |      | N    | M(L2)| ,    | .    | -    | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LCtl |  ^   | *    | LAlt | LGui |                                       | AltGr| Down |  Up  | Left | Right|
+ *   | LCtl |  ^   | *    | LAlt | LGui |                                       | AltGr| |    |  Up  | Left | Right|
  *   | (')  |  " ~ | '  ´ |      |      |                                       |      |      |      |      |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,--------------.
@@ -70,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          TG(SYMB),  KC_Y,   KC_U,                  KC_I,    KC_O,    KC_P,     SE_ARNG,
                     KC_H,   KC_J,                  KC_K,    KC_L,    SE_ODIA,  SE_ADIA,
          KC_DEL,    KC_N,   LT(MDIA, KC_M)       , KC_COMM, KC_DOT,  SE_MINS,  KC_RSFT,
-                            LT(KC_ALGR, SE_PIPE) , KC_DOWN, KC_UP,   KC_LEFT,  KC_RGHT,
+                            RALT_T(SE_PIPE)      , SE_PIPE, KC_UP,   KC_LEFT,  KC_RGHT,
          KC_HOME,        KC_END,
          KC_PGUP,
          KC_PGDN, CTL_T(KC_TAB), ALT_T(KC_ENT)
@@ -159,13 +160,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS
 ),
-
+/* Keymap 3: Programming keys
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * |        |      |      |      |  (   |  )   |      |           |      |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |  `   |      |      |  [   |  ]   |------|           |------|      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |  {   |  }   |      |           |      |      |      |      |      |      |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |      |      |      |      |      |                                       |      |      |      |      |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
 // PROGRAMMUNICATION
 [PROG] = LAYOUT_ergodox(
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_LPRN, SE_RPRN, KC_TRNS,
+       KC_TRNS, PE_GRAV, KC_TRNS, KC_TRNS, SE_LBRC, SE_RBRC,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_LCBR, SE_RCBR, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                            KC_TRNS, KC_TRNS,
                                                     KC_TRNS,
@@ -192,6 +213,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PE_TILD:
         if (record->event.pressed) {
             SEND_STRING("~ ");
+        }
+        return false;
+    case PE_GRAV:
+        if (record->event.pressed) {
+            SEND_STRING("` ");
         }
         return false;
     default:
