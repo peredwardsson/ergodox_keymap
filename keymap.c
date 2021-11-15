@@ -28,7 +28,11 @@
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   PE_TILD,
-  PE_GRAV
+  PE_GRAV,
+  PE_LARR,
+  PE_RARR,
+  PE_LEAR,
+  PE_REAR,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -167,9 +171,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * |        |      |      |      |  (   |  )   |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |  `   |      |      |  [   |  ]   |------|           |------|      |      |      |      |      |        |
+ * |        |  `   |   ;  |   :  |  [   |  ]   |------|           |------|      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |  {   |  }   |      |           |      |      |      |      |      |      |        |
+ * |        |  _   |      |      |  {   |  }   |      |           |      |      |      |      |      |      |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |      |      |      |      |      |                                       |      |      |      |      |      |
  *   `----------------------------------'                                       `----------------------------------'
@@ -183,10 +187,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 // PROGRAMMUNICATION
 [PROG] = LAYOUT_ergodox(
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_LPRN, SE_RPRN, KC_TRNS,
-       KC_TRNS, PE_GRAV, KC_TRNS, KC_TRNS, SE_LBRC, SE_RBRC,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_LCBR, SE_RCBR, KC_TRNS,
+       KC_TRNS, PE_LEAR, PE_REAR, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, PE_LARR, PE_RARR, KC_TRNS, SE_LPRN, SE_RPRN, KC_TRNS,
+       KC_TRNS, PE_GRAV, SE_COLN, SE_SCLN, SE_LBRC, SE_RBRC,
+       KC_TRNS, SE_UNDS, KC_TRNS, KC_TRNS, SE_LCBR, SE_RCBR, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                            KC_TRNS, KC_TRNS,
                                                     KC_TRNS,
@@ -218,6 +222,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PE_GRAV:
         if (record->event.pressed) {
             SEND_STRING("` ");
+        }
+        return false;
+    case PE_LARR:
+        if (record->event.pressed) {
+            SEND_STRING("<-");
+        }
+        return false;
+    case PE_RARR:
+        if (record->event.pressed) {
+            SEND_STRING("->");
+        }
+        return false;
+    case PE_LEAR:
+        if (record->event.pressed) {
+            SEND_STRING("<=");
+        }
+        return false;
+    case PE_REAR:
+        if (record->event.pressed) {
+            SEND_STRING("=>");
         }
         return false;
     default:
