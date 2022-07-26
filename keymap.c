@@ -15,6 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "action_tapping.h"
 #include "debug.h"
 #include "action_layer.h"
 #include "keymap_swedish.h"
@@ -27,6 +28,10 @@
 #define VIM  4 // vim like keys
 
 #define TAPPING_TERM_PER_KEY
+
+// #undef TAPPING_TOGGLE
+// #define TAPPING_TOGGLE 2
+
 uint8_t mod_state;
 
 enum custom_keycodes {
@@ -67,9 +72,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
     // left hand
     KC_ESC,         KC_1,     KC_2,     KC_3,    KC_4,    KC_5,   KC_F2,
-    KC_TAB,          KC_Q,     KC_W,     KC_E,    LGUI_T(KC_R) ,    KC_T,   MO(SYMB),
-    MO(PROG),        KC_A,     LALT_T(KC_S),     LCTL_T(KC_D),    LT(PROG,KC_F),    LT(VIM, KC_G),
-    KC_LSFT,         KC_Z,     KC_X,     KC_C,    KC_V,    KC_B,   SE_ACUT,
+    LT(VIM, KC_TAB),          KC_Q,     KC_W,     KC_E,    LGUI_T(KC_R) ,    KC_T,   MO(SYMB),
+    MO(PROG),        KC_A,     LALT_T(KC_S),     LCTL_T(KC_D),    LT(PROG,KC_F),    KC_G,
+    KC_LSFT,         KC_Z,     KC_X,     KC_C,    KC_V,    KC_B,                    TT(VIM),
     KC_LCTRL,  SE_CIRC,  SE_ASTR,  KC_LALT, KC_LGUI,
                                                KC_LCTRL,  KC_LALT,
                                                           SE_TILD,
@@ -80,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          KC_ENTER,  KC_Y,   LGUI_T(KC_U), KC_I,    KC_O,    KC_P,     SE_ARNG,
                     KC_H,   LT(PROG, KC_J), RCTL_T(KC_K),    RALT_T(KC_L),    SE_ODIA,  SE_ADIA,
          KC_DEL,    KC_N,   LT(MDIA, KC_M)       , KC_COMM, KC_DOT,  SE_MINS,  KC_RSFT,
-                            KC_SPC , SE_PIPE, SE_AT, SE_PLUS,  SE_QUOT,
+                            MO(PROG) , SE_PIPE, SE_AT, SE_PLUS,  SE_QUOT,
          KC_HOME,        KC_END,
          KC_PGUP,
          KC_PGDN, CTL_T(KC_TAB), LT(SYMB, KC_SPACE)
@@ -127,6 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS, KC_TRNS,
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS
+
 ),
 
 /* Keymap 2: Media and mouse keys
@@ -193,18 +199,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 // PROGRAMMUNICATION
 [PROG] = LAYOUT_ergodox(
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_COPY, KC_PSTE, SE_LPRN, SE_RPRN, KC_TRNS, KC_TRNS,
-       KC_TRNS, PE_GRAV, KC_CUT, SE_LBRC, SE_RBRC, SE_COLN,
-       KC_TRNS, KC_LCTL, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_ASTR,
+       SE_DQUO, KC_COPY, KC_PSTE, SE_LPRN, SE_RPRN, SE_EQL, SE_MINS,
+       SE_QUOT, PE_GRAV, KC_CUT, SE_LBRC, SE_RBRC, SE_COLN,
+       KC_TRNS, SE_HASH, PE_RARR, SE_LCBR, SE_RCBR, SE_SCLN, SE_UNDS,
+       KC_TRNS, KC_TRNS, KC_TRNS, SE_LABK, SE_RABK,
                                            KC_TRNS, KC_TRNS,
                                                     KC_TRNS,
                                   KC_TRNS, KC_TRNS, KC_TRNS,
     // right hand
-       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, LALT(KC_UP),
-       KC_TRNS,  KC_TRNS, SE_LCBR, SE_RCBR, S(KC_TAB), KC_TAB, LALT(KC_DOWN),
-                 SE_SCLN, SE_LABK, SE_RABK, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, TO(VIM), TO(BASE), KC_TRNS,
+       KC_TRNS,  KC_TRNS, SE_LCBR, SE_RCBR, SE_EXLM, SE_QUES, KC_TRNS,
+                 SE_SCLN, SE_LABK, SE_RABK, SE_HASH, SE_PERC, SE_AMPR,
        KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS,
@@ -235,22 +241,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Vim keys
 [VIM] = LAYOUT_ergodox(
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_END, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_HOME, KC_TRNS, KC_TRNS, KC_LALT, KC_LCTL,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                                           KC_TRNS, KC_TRNS,
+                                           KC_LSFT, KC_LSFT,
                                                     KC_TRNS,
-                                  KC_TRNS, KC_TRNS, KC_TRNS,
+                                  KC_ENTER, KC_ENTER, KC_LSHIFT,
     // right hand
-       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, SE_QUES,
-       KC_TRNS,  KC_HOME, KC_PGDN, KC_PGUP, KC_END, KC_TRNS, KC_TRNS,
+       KC_TRNS,  KC_TRNS, KC_PGUP, KC_TRNS, TO(VIM), TO(BASE), KC_TRNS,
+       KC_TRNS,  KC_PGUP, KC_HOME, KC_END, KC_PGDN, KC_TRNS, KC_TRNS,
                  KC_LEFT, KC_DOWN, KC_UP , KC_RIGHT, KC_TRNS, KC_TRNS,
-       KC_TRNS,  LCTL(KC_LEFT), KC_TRNS, KC_TRNS, LCTL(KC_RIGHT), KC_TRNS, KC_TRNS,
+       KC_BSPC,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS,
        KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS
+       KC_TRNS, KC_LSHIFT, KC_LGUI
 ),
 };
 
@@ -265,12 +271,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case PE_TILD:
         if (record->event.pressed) {
-            SEND_STRING("~ ");
+            SEND_STRING("~");
         }
         return false;
     case PE_GRAV:
         if (record->event.pressed) {
-            SEND_STRING("` ");
+            SEND_STRING("`");
         }
         return false;
     case PE_LARR:
